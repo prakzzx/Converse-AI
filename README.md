@@ -13,7 +13,7 @@ Converse AI is a full-stack platform for designing voice agents and running them
 - Keep track of details like names and emails as the call progresses
 - Fire webhooks and tools when the caller asks for an action
 - Review every past call with its full transcript
-- Receive a Gmail alert each time a new lead is captured.
+- Receive a Gmail alert each time a new lead is captured
 
 ## Stack
 
