@@ -49,7 +49,7 @@ A short call might go like this:
 | Caller says | System records |
 |---|---|
 | "I'm Rahul" | name = Rahul |
-| "I work at Infosys" | company = Infosys |
+| "I work at Infosys" | company = google |
 | "rahul at gmail dot com" | email = rahul@gmail.com |
 | "Please save my details" | `send_lead` runs, then `notify_lead` |
 
@@ -58,7 +58,7 @@ The lead is sent as a structured payload:
 ```json
 {
   "name": "Rahul",
-  "company": "Infosys",
+  "company": "google",
   "email": "rahul@gmail.com"
 }
 ```
