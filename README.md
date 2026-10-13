@@ -1,438 +1,188 @@
-# Prakati
+# Converse AI
 
-A production-style voice AI platform for building, orchestrating and running conversational voice agents.
+Build voice agents, talk to them live, and control how each conversation unfolds, stage by stage.
 
-This platform enables users to create configurable voice agents, automatically provision voice assistants, run realtime conversations, orchestrate multi-stage flows, manage memory, execute tools, and build advanced conversational workflows.
+Converse AI is a full-stack platform for designing voice agents and running them in real time. Each agent can follow a staged conversation script, remember what the caller has said, and trigger actions mid-call, such as saving a lead and sending you an email about it.
 
----
+## What You Can Do
 
-# Overview
+- Set up voice agents with their own prompts, voices, and settings
+- Have the platform create the matching voice assistant for you
+- Talk to an agent in the browser and watch the transcript appear live
+- Break a conversation into stages that advance as the caller responds
+- Keep track of details like names and emails as the call progresses
+- Fire webhooks and tools when the caller asks for an action
+- Review every past call with its full transcript
+- Receive a Gmail alert each time a new lead is captured
 
-Prakati is designed as a full voice AI platform rather than a simple chatbot application.
+## Stack
 
-Users can:
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, React Router |
+| Backend | Node.js, Express (CommonJS) |
+| Database | PostgreSQL with Prisma |
+| Voice | Vapi, Deepgram, OpenAI and ElevenLabs voices |
+| Email | Nodemailer over Gmail SMTP |
 
-* Create configurable voice agents
-* Automatically provision assistants
-* Run realtime voice conversations
-* Build multi-stage prompt orchestration workflows
-* Add memory and context injection
-* Execute tools and webhook integrations
-* Store conversations and transcripts
-* Create production-style conversational pipelines
+## How It Fits Together
 
----
+An agent's configuration is turned into layered prompts. The orchestration engine decides which stage a call is in, the memory layer supplies context, and the tool layer handles actions. The result is injected into the live voice session.
 
-# Tech Stack
-
-## Frontend
-
-* React
-* Vite
-* React Router
-* Dark Dashboard UI
-* React Flow (Prompt Orchestration UI)
-
-## Backend
-
-* Node.js
-* Express
-* CommonJS Architecture
-
-## Database
-
-* PostgreSQL
-* Prisma ORM
-
-## Voice Stack
-
-* Vapi
-* Deepgram
-* OpenAI Voices
-* ElevenLabs Voices
-
----
-
-# Architecture
-
-```text
-Agent Configuration
-
-↓
-
-Prompt Layers
-
-↓
-
-Prompt Orchestration Engine
-
-↓
-
-Memory Layer
-
-↓
-
-Tool Layer
-
-↓
-
-Conversation Context
-
-↓
-
-Runtime Context Injection
-
-↓
-
-Voice Runtime
+```
+Agent config → Prompt layers → Orchestration → Memory → Tools → Live voice session
 ```
 
----
+## Anatomy of a Call
 
-# Project Structure
+1. The caller speaks and the speech is transcribed.
+2. The backend updates the conversation state and extracts details worth remembering.
+3. The prompt is rebuilt for the current stage.
+4. Stage conditions are checked, and the call moves forward if one is met.
+5. If the caller asks for an action, the matching tool runs, optionally through a webhook.
+6. The assistant replies, and the cycle repeats.
 
-```text
-prakati/
+## Lead Capture Walkthrough
 
-├── frontend/
-│
-│   ├── src/
-│   │
-│   ├── components/
-│   │   ├── AgentCard.jsx
-│   │   ├── FlowDefinitionEditor.jsx
-│   │   ├── Layout.jsx
-│   │   ├── MessageBubble.jsx
-│   │   └── NotificationToast.jsx
-│   │
-│   ├── pages/
-│   │   ├── Dashboard.jsx
-│   │   ├── AgentsList.jsx
-│   │   ├── AgentDetail.jsx
-│   │   ├── CreateAgent.jsx
-│   │   ├── TalkToAgent.jsx
-│   │   ├── ConversationHistory.jsx
-│   │   └── ConversationDetail.jsx
-│
-├── backend/
-│
-│   ├── controllers/
-│   ├── routes/
-│   ├── services/
-│   │
-│   │   ├── agentService.js
-│   │   ├── callStateStore.js
-│   │   ├── conditionEvaluator.js
-│   │   ├── contextService.js
-│   │   ├── conversationService.js
-│   │   ├── memoryService.js
-│   │   ├── orchestrationService.js
-│   │   ├── orchestrationSchema.js
-│   │   ├── promptService.js
-│   │   ├── notificationService.js
-│   │   ├── toolExecutor.js
-│   │   ├── toolRegistry.js
-│   │   └── toolRouter.js
-│
-│   └── server.js
-│
-├── prisma/
-│
-└── frontend/
-```
+A short call might go like this:
 
----
+| Caller says | System records |
+|---|---|
+| "I'm Rahul" | name = Rahul |
+| "I work at Infosys" | company = Infosys |
+| "rahul at gmail dot com" | email = rahul@gmail.com |
+| "Please save my details" | `send_lead` runs, then `notify_lead` |
 
-# Core Features
+The lead is sent as a structured payload:
 
-## Agent Management
-
-* Create Agents
-* Edit Agents
-* Delete Agents
-* Agent Dashboard
-* Dynamic Routing
-* Voice Provider Selection
-
-## Voice Features
-
-* Realtime Voice Calls
-* Live Transcript UI
-* Conversation Completion UI
-* Automatic Assistant Provisioning
-* Assistant Storage
-* Voice Provider Integration
-
-## Prompt Orchestration
-
-* Multi Stage Flows
-* Stage Based Conversation Management
-* Dynamic Stage Advancement
-* Flow Builder UI
-* Runtime Prompt Injection
-
-## Memory System
-
-* Conversation State Store
-* Transcript Storage
-* Runtime Context Injection
-* Collected Data Persistence During Calls
-
-## Tool Calling
-
-* Tool Registry
-* Tool Router
-* Webhook Execution
-* Structured Tool Payloads
-* Lead Collection Workflow
-* Lead Notifications (Slack / Email) via a chained second tool
-
----
-
-# Runtime Flow
-
-```text
-User Speaks
-
-↓
-
-Transcript Generated
-
-↓
-
-Conversation State Updated
-
-↓
-
-Memory Extraction
-
-↓
-
-Prompt Compilation
-
-↓
-
-Stage Evaluation
-
-↓
-
-Tool Detection
-
-↓
-
-Webhook Execution (Optional)
-
-↓
-
-Assistant Response
-
-↓
-
-Next Stage Evaluation
-```
-
----
-
-# Example Lead Collection Flow
-
-```text
-User:
-
-"My name is John"
-
-↓
-
-Memory Stores:
-
-name=John
-
-↓
-
-User:
-
-"Company is Google"
-
-↓
-
-Memory Stores:
-
-company=Google
-
-↓
-
-User:
-
-"john at gmail dot com"
-
-↓
-
-Extracted:
-
-john@gmail.com
-
-↓
-
-User:
-
-"Save this lead"
-
-↓
-
-Tool Router Detects Tool
-
-↓
-
-Webhook Executes With:
-
+```json
 {
-
- name:"John",
-
- company:"Google",
-
- email:"john@gmail.com"
-
+  "name": "Rahul",
+  "company": "Infosys",
+  "email": "rahul@gmail.com"
 }
 ```
 
----
+## Email Alerts
 
-# Lead Notifications (Slack / Email)
+After a lead is saved, the `notify_lead` tool sends a Gmail message to the address you choose. It only runs once `send_lead` has succeeded.
 
-When a lead is saved, Prakati runs a second tool, `notify_lead`, which alerts your team.
+Email is kept separate from lead storage. If sending fails, the lead stays saved.
 
-```text
-"Save this lead"  →  send_lead (webhook)  →  notify_lead  →  Slack and/or Email
-```
-
-* `notify_lead` only runs if `send_lead` succeeded.
-* Slack and email are independent. A failure in one never blocks the other or the lead save.
-* Each channel turns on automatically when its env vars are set. Use `NOTIFY_CHANNELS` to restrict.
-* Lead data is escaped before it goes into Slack or HTML email.
-
-**Slack:** create an [Incoming Webhook](https://api.slack.com/messaging/webhooks) and set `SLACK_WEBHOOK_URL`.
-
-**Email:** set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` and `NOTIFY_EMAIL_TO` (any SMTP provider works).
-
-Run the tests with `cd backend && npm test`.
-
----
-
-# Environment Variables
-
-Copy `backend/.env.example` to `backend/.env` and `frontend/.env.example` to `frontend/.env`, then fill in the values.
-
-## Backend
+Add the following to `backend/.env`:
 
 ```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-gmail-app-password
+SMTP_FROM=your-email@gmail.com
+NOTIFY_EMAIL_TO=recipient@example.com
+NOTIFY_CHANNELS=email
+```
+
+Gmail requires an App Password here. Your normal login password will be rejected.
+
+## Repository Layout
+
+```
+converse-ai/
+├── frontend/
+│   └── src/
+│       ├── components/
+│       ├── context/
+│       ├── hooks/
+│       ├── pages/
+│       └── services/
+├── backend/
+│   ├── config/
+│   ├── constants/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── prisma/
+│   ├── routes/
+│   ├── services/
+│   └── server.js
+└── README.md
+```
+
+Most of the logic lives in `backend/services/`:
+
+| Service | Responsibility |
+|---|---|
+| `agentService` | Create, update, and delete agents and their assistants |
+| `vapiService` | Communicate with the Vapi API |
+| `promptService` | Assemble the layered prompt for each stage |
+| `orchestrationService` | Run the stage flow and handle transitions |
+| `orchestrationSchema` | Validate flow definitions |
+| `conditionEvaluator` | Decide whether a transition condition is met |
+| `callStateStore` | Hold the live state of active calls |
+| `contextService` | Gather context from earlier conversations |
+| `memoryService` | Extract and summarize conversation memory |
+| `conversationService` | Store calls, messages, and transcripts |
+| `toolRegistry`, `toolRouter`, `toolExecutor` | Define, detect, and run tools |
+| `notificationService` | Send email alerts |
+
+## Configuration
+
+**Backend** (`backend/.env`)
+
+```env
+PORT=3001
+FRONTEND_URL=http://localhost:5173
 DATABASE_URL=
-
 VAPI_API_KEY=
-
 OPENAI_API_KEY=
-
 DEEPGRAM_API_KEY=
-
-SLACK_WEBHOOK_URL=
-
-SMTP_HOST=
-SMTP_PORT=
-SMTP_USER=
-SMTP_PASS=
-SMTP_FROM=
-NOTIFY_EMAIL_TO=
 ```
 
-## Frontend
+Add the SMTP variables from the Email Alerts section.
+
+**Frontend** (`frontend/.env`)
 
 ```env
+VITE_API_URL=http://localhost:3001
 VITE_VAPI_PUBLIC_KEY=
 ```
 
----
-
-# Installation
-
-## Clone Repository
+## Getting Started
 
 ```bash
 git clone <repo-url>
-
-cd prakati
+cd converse-ai
 ```
 
-## Backend Setup
+**Start the backend**
 
 ```bash
 cd backend
-
 npm install
-
 npx prisma generate
-
 npx prisma migrate dev
-
 npm run dev
 ```
 
-Backend:
+The API runs at `http://localhost:3001`.
 
-```text
-localhost:3001
-```
-
-## Frontend Setup
+**Start the frontend**
 
 ```bash
 cd frontend
-
 npm install
-
 npm run dev
 ```
 
-Frontend:
+The app runs at `http://localhost:5173`.
 
-```text
-localhost:5173
-```
+## Upcoming Work
 
----
+- Document uploads and retrieval (RAG)
+- Production deployment and scaling
+- Call analytics and reporting
+- User accounts with real authentication
+- Support for multiple users and teams
+- CRM integrations
 
-# Current Capabilities
+## Goal
 
-* Realtime Voice Conversations
-* Multi Layer Prompting
-* Prompt Orchestration
-* Memory Systems
-* Runtime Context Injection
-* Conversation Context
-* Tool Calling Framework
-* Webhook Integrations
-* Structured Data Extraction
-* Sales Workflow Automation
-
----
-
-# Roadmap
-
-## Next Steps
-
-* CRM Integrations
-* More notification channels (SMS, Teams)
-* RAG / Document Uploads
-* Analytics Dashboard
-* Authentication
-* Multi User Support
-* Production Deployment
-* Scaling Infrastructure
-
----
-
-# Vision
-
-Build a production-style voice AI platform capable of supporting sophisticated conversational systems with orchestration, memory, tools, context injection, and realtime voice interactions.
-
-The objective is not simply voice chat.
-
-The objective is orchestration.
+Converse AI aims to make structured, multi-step voice conversations easy to design and reliable to run. Voice is the interface, but the real focus is orchestration.
