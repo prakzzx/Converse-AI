@@ -23,7 +23,7 @@ Converse AI is a full-stack platform for designing voice agents and running them
 | Backend | Node.js, Express (CommonJS) |
 | Database | PostgreSQL with Prisma |
 | Voice | Vapi, Deepgram, OpenAI and ElevenLabs voices |
-| Email | Nodemailer over Gmail SMTP |
+| Slack | Jenkins build notification |
 
 ## How It Fits Together
 
